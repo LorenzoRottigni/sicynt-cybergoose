@@ -1,7 +1,7 @@
 <template>
-    <main class="d-flex align-items-center">
+    <main class="d-flex align-items-center justify-content-around flex-grow-1 py-5">
         <GooseGrid/>
-        <DiceSection/>
+        <DiceSection class="align-self-end"/>
     </main>
 </template>
 
@@ -17,3 +17,9 @@ export default {
     }
 }
 </script>
+
+<style scoped lang="sass">
+
+
+        
+</style>
