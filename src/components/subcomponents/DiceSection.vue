@@ -69,14 +69,14 @@
             },
             move: function(index, diceNumber) {
                 for (let i = 0; i < diceNumber; i++) {
-                    this.$root.$refs.GooseGrid.moveLeft(index)
+                    this.$root.$refs.GooseGrid.movePlayer(index)
                     
                 }
                 
             },
             moveBack: function(index, diceNumber) {
                 for (let i = 0; i < diceNumber; i++) {
-                    setTimeout(()=> this.$root.$refs.GooseGrid.moveBack(index), 3000)
+                    setTimeout(()=> this.$root.$refs.GooseGrid.movePlayerBack(index), 3000)
                    
                 }
                 

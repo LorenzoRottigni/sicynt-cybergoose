@@ -1,14 +1,15 @@
 <template>
     <section id="goose-grid-section" class="d-flex flex-wrap flex-shrink-0">
         <img :key="'A'+ index" v-for="(player, index) in players" 
-            :id="player.id" :src="player.src" :alt="player.alt" :class="(player.stop) ? 'bg-danger' : ''">
+            :id="player.id" :src="player.src" :alt="player.alt" :class="(player.stop) ? 'bg-danger' : ''"
+            :style="{ left: ('calc((75vh / 9) * ' + player.colCounter), top: ('calc((75vh / 9) * ' + player.rowCounter) }">
         <div class="box d-flex justify-content-center align-items-center" :key="index" v-for="(box,index) in boxes"
             :class="`box-${box.boxType}`">
             <h1 class="m-0">{{box.boxID}}</h1>  
         </div>
         <div v-if="winner!=undefined" class="winner-container rounded d-flex flex-column align-items-center justify-content-end py-5">
                 <h3 class="bg-light rounded p-3">{{winner}} ha catturato il CyberCriminale!</h3> 
-                <button class="btn btn-lg">Play Again</button>
+                <button class="btn btn-lg mt-3" @click="reloadPage">Play Again</button>
         </div>
     </section>
 </template>
@@ -60,44 +61,32 @@ export default {
         this.$root.$refs.GooseGrid = this;
     },
     methods : {
-        /**
-         * Devo fare le classi per settare colCounter e rowCounter
-         * poi devo assegnare un v:bind al top e al left collegato a rowCounter e ColCounter
-         */
-        moveLeft(index){
+        movePlayer(index){
             this.players[index].colCounter++
-            const playerIcon = document.querySelector(`#${this.players[index].id}`)
-            if(this.players[index].colCounter % 9 === 0)
-                this.moveDown(playerIcon, index)    
-            else
-                playerIcon.style.left = 'calc((75vh / 9) * '+this.players[index].colCounter+')'
-            
-            if(this.players[index].rowCounter > 9){
+            if(this.players[index].colCounter % 9 === 0){
+                this.players[index].colCounter = 0
+                this.players[index].rowCounter++
+            }
+            if(this.players[index].rowCounter > 8){
                 this.winner = this.players[index].id
+                this.players.forEach(element => {
+                    element.colCounter = 0
+                    element.rowCounter = 0
+                });
             }
         },
-        moveBack(index){
+        movePlayerBack(index){
             this.players[index].colCounter--
-            const playerIcon = document.querySelector(`#${this.players[index].id}`)
-            if(this.players[index].colCounter % 9 === 0)
-                this.moveUp(playerIcon, index)    
-            else
-                playerIcon.style.left = 'calc((75vh / 9) * '+this.players[index].colCounter+')'
-        },
-        moveDown(playerIcon, index){
-            this.players[index].rowCounter++
-            this.players[index].colCounter = 0
-            playerIcon.style.left = 0
-            playerIcon.style.top = 'calc((75vh / 9) * '+this.players[index].rowCounter+')'
+            if(this.players[index].colCounter < 0){
+                this.players[index].colCounter = 8
+                this.players[index].rowCounter--
+            }
             
         },
-        moveUp(playerIcon, index){
-            this.players[index].rowCounter--
-            this.players[index].colCounter = 9
-            playerIcon.style.left = 'calc((75vh / 9) * '+this.players[index].colCounter+')'
-            playerIcon.style.top = 'calc((75vh / 9) * '+this.players[index].rowCounter+')'
-            
+        reloadPage(){
+            location.reload()
         }
+
     },
     mounted(){
         for (let i = 0; i < 81; i++) {
@@ -154,12 +143,14 @@ export default {
         right: 0
         left: 0
         bottom: 0
-        background-image: url('./../../assets/winner-image.jpeg')
+        background-image: url('./../../assets/winner-image-red.jpg')
         background-size: contain
         background-repeat: no-repeat
         background-position: right top
-        background-color: #f04d46
+        background-color: #992116
         border: solid white
+        h3
+            color: #00abcd
         button
             background-color: #00abcd
             color: white
